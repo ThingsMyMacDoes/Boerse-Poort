@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Garden Sun Direction</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+    <aside id="panel">
+        <header>
+            <h1>Where does the sun come from?</h1>
+            <p id="gardenName" class="muted"></p>
+        </header>
+
+        <section>
+            <h2>Your plot</h2>
+            <p id="plotHint" class="muted">Click “Draw my plot”, then click the 4 corners of your plot on the map.</p>
+            <div class="row">
+                <button type="button" id="drawBtn">✎ Draw my plot</button>
+                <button type="button" id="clearPlot" class="small" hidden>Remove plot</button>
+            </div>
+        </section>
+
+        <section>
+            <div class="seg" role="tablist" aria-label="View">
+                <button type="button" data-mode="day" role="tab">Play a day</button>
+                <button type="button" data-mode="month" role="tab">Per month</button>
+            </div>
+        </section>
+
+        <section id="daySection">
+            <div class="row">
+                <label for="dateInput">Date</label>
+                <button type="button" id="prevDay" class="small" aria-label="Previous day">‹</button>
+                <input type="text" id="dateInput" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" spellcheck="false">
+                <button type="button" id="nextDay" class="small" aria-label="Next day">›</button>
+                <button type="button" id="todayBtn" class="small">Today</button>
+            </div>
+            <input type="range" id="daySlider" min="1" max="365" aria-label="Day of the year">
+            <div class="row">
+                <label for="timeSlider">Time</label>
+                <output id="timeOut"></output>
+                <span class="spacer"></span>
+                <select id="speed" aria-label="Playback speed">
+                    <option value="2">Slow</option>
+                    <option value="5">Normal</option>
+                    <option value="15">Fast</option>
+                </select>
+                <button type="button" id="playBtn">▶ Play</button>
+            </div>
+            <input type="range" id="timeSlider" min="0" max="1439" step="1" aria-label="Time of day">
+        </section>
+
+        <section id="monthSection" hidden>
+            <div class="row">
+                <label for="monthYear">Year</label>
+                <input type="number" id="monthYear" min="1900" max="2200" step="1">
+            </div>
+            <div class="months" id="monthButtons"></div>
+            <p class="muted small-text">The sun's path is shown for the 15th of the month, the hours of sun are averaged over the whole month.</p>
+        </section>
+
+        <section id="infoSection">
+            <div id="sunInfo"></div>
+            <div id="legend"></div>
+        </section>
+
+        <section id="plotSection" hidden>
+            <h2 id="plotTitle">Where your plot's sun comes from</h2>
+            <div id="plotSun"></div>
+            <label class="check"><input type="checkbox" id="fixedScale"> Fixed colours (red = strongest sun at midsummer) to compare dates</label>
+        </section>
+
+        <section>
+            <h2>Settings</h2>
+            <div class="grid2">
+                <label for="tz">Time zone</label>
+                <input type="text" id="tz" spellcheck="false">
+                <label for="fileInput">Garden outline</label>
+                <input type="file" id="fileInput" accept=".geojson,.json,application/geo+json">
+            </div>
+            <p class="muted small-text">You can also drop a .geojson file onto the map.</p>
+            <button type="button" id="resetBtn" class="small">Reset everything to defaults</button>
+        </section>
+
+        <section class="about">
+            <h2>How it works</h2>
+            <p class="muted small-text">
+                From the middle of your plot, a line is drawn towards the sun every few minutes of the day. Where that
+                line meets the garden outline is shown in yellow, with hour marks: this is where you see the sun at
+                that time. The outline of your plot is coloured by how much of the sun's energy comes from each
+                direction: every moment is weighed by the height of the sun (a high sun shines through less air and
+                hits the ground more steeply), from dark blue (no sun from that side) to red (where the strongest sun
+                comes from). Clear-sky sun; buildings, trees and clouds are not taken into account.
+            </p>
+        </section>
+    </aside>
+
+    <main id="map" aria-label="Garden map"></main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="garden.js"></script>
+<script src="solar.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
