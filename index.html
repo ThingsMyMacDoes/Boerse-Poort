@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Garden Sun Direction</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+    <aside id="panel">
+        <header>
+            <h1>Where does the sun come from?</h1>
+            <p id="gardenName" class="muted"></p>
+        </header>
+
+        <section>
+            <h2>Your position</h2>
+            <p id="posHint" class="muted">Click your position in the garden on the map. You can drag the marker afterwards.</p>
+            <div id="posInfo" class="row" hidden>
+                <span id="posCoords" class="muted small-text"></span>
+                <button type="button" id="clearPos" class="small">Clear</button>
+            </div>
+        </section>
+
+        <section>
+            <div class="seg" role="tablist" aria-label="View">
+                <button type="button" data-mode="day" role="tab">Play a day</button>
+                <button type="button" data-mode="month" role="tab">Per month</button>
+            </div>
+        </section>
+
+        <section id="daySection">
+            <div class="row">
+                <label for="dateInput">Date</label>
+                <button type="button" id="prevDay" class="small" aria-label="Previous day">‹</button>
+                <input type="text" id="dateInput" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" spellcheck="false">
+                <button type="button" id="nextDay" class="small" aria-label="Next day">›</button>
+                <button type="button" id="todayBtn" class="small">Today</button>
+            </div>
+            <input type="range" id="daySlider" min="1" max="365" aria-label="Day of the year">
+            <div class="row">
+                <label for="timeSlider">Time</label>
+                <output id="timeOut"></output>
+                <span class="spacer"></span>
+                <select id="speed" aria-label="Playback speed">
+                    <option value="2">Slow</option>
+                    <option value="5">Normal</option>
+                    <option value="15">Fast</option>
+                </select>
+                <button type="button" id="playBtn">▶ Play</button>
+            </div>
+            <input type="range" id="timeSlider" min="0" max="1439" step="1" aria-label="Time of day">
+        </section>
+
+        <section id="monthSection" hidden>
+            <div class="row">
+                <label for="monthYear">Year</label>
+                <input type="number" id="monthYear" min="1900" max="2200" step="1">
+            </div>
+            <div class="months" id="monthButtons"></div>
+            <p class="muted small-text">The sun's path is shown for the 15th of the month, the hours of sun are averaged over the whole month.</p>
+        </section>
+
+        <section id="infoSection">
+            <div id="sunInfo"></div>
+            <div id="legend"></div>
+        </section>
+
+        <section>
+            <h2>Trees</h2>
+            <div class="grid2">
+                <label for="treeHeight">Average tree height</label>
+                <span><input type="number" id="treeHeight" min="1" max="80" step="1"> m</span>
+                <label for="crown">Crown reach into garden</label>
+                <span><input type="number" id="crown" min="0" max="20" step="0.5"> m</span>
+                <label for="treeType">Tree type</label>
+                <select id="treeType">
+                    <option value="evergreen">In leaf all year</option>
+                    <option value="deciduous">Deciduous (bare in winter)</option>
+                </select>
+            </div>
+            <div id="deciduousOpts" class="grid2" hidden>
+                <label for="leafOut">Leaves out (dd/mm)</label>
+                <input type="text" id="leafOut" placeholder="dd/mm" maxlength="5">
+                <label for="leafFall">Leaves fallen (dd/mm)</label>
+                <input type="text" id="leafFall" placeholder="dd/mm" maxlength="5">
+            </div>
+            <p class="muted small-text">Green sides of the outline have trees. Click a side to switch its trees off or give it its own height.</p>
+        </section>
+
+        <section>
+            <h2>Settings</h2>
+            <div class="grid2">
+                <label for="tz">Time zone</label>
+                <input type="text" id="tz" spellcheck="false">
+                <label for="fileInput">Garden outline</label>
+                <input type="file" id="fileInput" accept=".geojson,.json,application/geo+json">
+            </div>
+            <p class="muted small-text">You can also drop a .geojson file onto the map.</p>
+            <button type="button" id="resetBtn" class="small">Reset everything to defaults</button>
+        </section>
+
+        <section class="about">
+            <h2>How it works</h2>
+            <p class="muted small-text">
+                From your position, a line is drawn towards the sun for every few minutes of the day. Where that line
+                meets the garden outline is the part of the tree line the sun is above at that moment. If the sun is
+                higher than the treetops seen from your position, the sun reaches you (yellow); otherwise you are in
+                the shade of the trees (grey). The trees are treated as a continuous wall of the given height along the
+                outline, with crowns reaching a few metres inwards.
+            </p>
+        </section>
+    </aside>
+
+    <main id="map" aria-label="Garden map"></main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="garden.js"></script>
+<script src="solar.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
